@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STM32H745I-DISCO MMC_ReadWrite_DMA CubeMX 프로젝트 생성 가이드</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ff6600;
+            --text-color: #333;
+            --border-color: #ddd;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 25px;
+        }
+
+        .step-container {
+            background: var(--secondary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .important {
+            background: #fff3cd;
+            border: 1px solid var(--warning-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .important::before {
+            content: "⚠️ 중요: ";
+            font-weight: bold;
+        }
+
+        .note {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .note::before {
+            content: "📝 참고: ";
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .warning::before {
+            content: "🚨 주의: ";
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success::before {
+            content: "✅ ";
+            font-weight: bold;
+        }
+
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--secondary-color);
+        }
+
+        .pin-table td:first-child {
+            font-weight: bold;
+            background: #e3f2fd;
+        }
+
+        .config-value {
+            font-family: 'Consolas', monospace;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .menu-path {
+            background: linear-gradient(90deg, #e3f2fd, #fff);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .menu-path span {
+            color: var(--primary-color);
+        }
+
+        .screenshot-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            color: #888;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .toc {
+            background: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            padding: 5px 0;
+        }
+
+        .toc a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .summary-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: #666;
+        }
+
+        @media print {
+            body {
+                max-width: none;
+            }
+            .step-container {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 STM32H745I-DISCO<br>MMC_ReadWrite_DMA<br>CubeMX 프로젝트 생성 가이드</h1>
+
+    <div class="summary-box">
+        <h3>프로젝트 개요</h3>
+        <p>이 가이드는 STM32H745I-DISCO 보드의 eMMC(MMC_ReadWrite_DMA) 예제를 STM32CubeMX를 사용하여 처음부터 새로 생성하는 방법을 설명합니다.</p>
+        <p><strong>주요 기능:</strong> eMMC 8비트 DMA 읽기/쓰기, UART 디버그 출력, LED 상태 표시</p>
+    </div>
+
+    <div class="toc">
+        <h3>📋 목차</h3>
+        <ul>
+            <li><a href="#prerequisites">1. 사전 준비사항</a></li>
+            <li><a href="#new-project">2. 새 프로젝트 생성</a></li>
+            <li><a href="#clock-config">3. 클럭 설정</a></li>
+            <li><a href="#sdmmc-config">4. SDMMC1 (eMMC) 설정</a></li>
+            <li><a href="#uart-config">5. USART3 (디버그) 설정</a></li>
+            <li><a href="#gpio-config">6. GPIO (LED) 설정</a></li>
+            <li><a href="#nvic-config">7. NVIC 인터럽트 설정</a></li>
+            <li><a href="#project-manager">8. 프로젝트 매니저 설정</a></li>
+            <li><a href="#generate-code">9. 코드 생성</a></li>
+            <li><a href="#user-code">10. 사용자 코드 추가</a></li>
+            <li><a href="#troubleshooting">11. 트러블슈팅</a></li>
+        </ul>
+    </div>
+
+    <h2 id="prerequisites">1. 사전 준비사항</h2>
+
+    <div class="step-container">
+        <h3>필요한 소프트웨어</h3>
+        <ul class="checklist">
+            <li>STM32CubeMX (최신 버전 권장, 6.x 이상)</li>
+            <li>STM32CubeIDE 또는 다른 IDE (Keil, IAR 등)</li>
+            <li>STM32Cube_FW_H7 패키지 (CubeMX에서 자동 다운로드)</li>
+            <li>ST-LINK 드라이버</li>
+        </ul>
+
+        <h3>하드웨어</h3>
+        <ul class="checklist">
+            <li>STM32H745I-DISCO 보드</li>
+            <li>USB 케이블 (ST-LINK 연결용)</li>
+            <li>시리얼 터미널 프로그램 (PuTTY, Tera Term 등)</li>
+        </ul>
+    </div>
+
+    <div class="important">
+        이 프로젝트는 <strong>Dual-Core (CM7 + CM4)</strong> 프로젝트입니다. CM7이 주요 동작을 수행하고, CM4는 STOP 모드에서 대기합니다.
+    </div>
+
+    <h2 id="new-project">2. 새 프로젝트 생성</h2>
+
+    <div class="step-container">
+        <p><span class="step-number">1</span> STM32CubeMX를 실행합니다.</p>
+
+        <p><span class="step-number">2</span> <strong>File → New Project</strong>를 선택합니다.</p>
+
+        <p><span class="step-number">3</span> <strong>Board Selector</strong> 탭을 클릭합니다.</p>
+
+        <p><span class="step-number">4</span> 검색창에 <code>STM32H745I-DISCO</code>를 입력합니다.</p>
+
+        <p><span class="step-number">5</span> 보드를 선택하고 <strong>Start Project</strong>를 클릭합니다.</p>
+
+        <p><span class="step-number">6</span> "Initialize all peripherals with their default Mode?" 팝업이 나타나면 <strong>No</strong>를 선택합니다.</p>
+
+        <div class="note">
+            <strong>No</strong>를 선택하면 기본 설정 없이 시작하여 필요한 것만 직접 설정할 수 있습니다.
+        </div>
+    </div>
+
+    <h2 id="clock-config">3. 클럭 설정</h2>
+
+    <div class="step-container">
+        <h3>3.1 RCC 설정</h3>
+
+        <p>좌측 패널에서 <span class="menu-path">System Core → <span>RCC</span></span>를 선택합니다.</p>
+
+        <table>
+            <tr>
+                <th>설정 항목</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>High Speed Clock (HSE)</td>
+                <td class="config-value">Crystal/Ceramic Resonator</td>
+            </tr>
+            <tr>
+                <td>Low Speed Clock (LSE)</td>
+                <td class="config-value">Disable (또는 필요시 Crystal)</td>
+            </tr>
+        </table>
+
+        <h3>3.2 Clock Configuration 탭</h3>
+
+        <p>상단의 <strong>Clock Configuration</strong> 탭을 클릭합니다.</p>
+
+        <div class="important">
+            SDMMC1 클럭(PLL1Q)이 200MHz가 되도록 설정해야 합니다. 이를 통해 SDMMC 클럭을 50MHz로 나눌 수 있습니다.
+        </div>
+
+        <table>
+            <tr>
+                <th>클럭 파라미터</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Input Frequency (HSE)</td>
+                <td class="config-value">25 MHz</td>
+            </tr>
+            <tr>
+                <td>PLL Source Mux</td>
+                <td class="config-value">HSE</td>
+            </tr>
+            <tr>
+                <td>PLLM</td>
+                <td class="config-value">/5</td>
+            </tr>
+            <tr>
+                <td>PLLN</td>
+                <td class="config-value">x160</td>
+            </tr>
+            <tr>
+                <td>PLLP</td>
+                <td class="config-value">/2</td>
+            </tr>
+            <tr>
+                <td>PLLQ</td>
+                <td class="config-value">/4</td>
+            </tr>
+            <tr>
+                <td>PLLR</td>
+                <td class="config-value">/2</td>
+            </tr>
+            <tr>
+                <td>System Clock Mux</td>
+                <td class="config-value">PLLCLK</td>
+            </tr>
+            <tr>
+                <td>SYSCLK (MHz)</td>
+                <td class="config-value">400 MHz</td>
+            </tr>
+            <tr>
+                <td>AHB Prescaler</td>
+                <td class="config-value">/2 (HCLK = 200 MHz)</td>
+            </tr>
+            <tr>
+                <td>APB1, APB2, APB3, APB4 Prescaler</td>
+                <td class="config-value">/2 (각 100 MHz)</td>
+            </tr>
+        </table>
+
+        <h3>3.3 SDMMC1 클럭 소스 설정</h3>
+
+        <p>Clock Configuration 다이어그램에서:</p>
+        <ul>
+            <li><strong>SDMMC1 Clock Mux</strong>를 <code class="config-value">PLL1 Q</code>로 선택</li>
+            <li>결과: SDMMC1 Kernel Clock = 200 MHz</li>
+        </ul>
+
+        <div class="success">
+            최종 클럭: SYSCLK=400MHz, HCLK=200MHz, PLL1Q=200MHz (SDMMC용)
+        </div>
+    </div>
+
+    <h2 id="sdmmc-config">4. SDMMC1 (eMMC) 설정</h2>
+
+    <div class="step-container">
+        <h3>4.1 SDMMC1 모드 설정</h3>
+
+        <p>좌측 패널에서 <span class="menu-path">Connectivity → <span>SDMMC1</span></span>를 선택합니다.</p>
+
+        <table>
+            <tr>
+                <th>설정 항목</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Mode</td>
+                <td class="config-value">MMC 8 bits Wide bus</td>
+            </tr>
+        </table>
+
+        <div class="note">
+            STM32H745I-DISCO의 eMMC는 8비트 버스를 지원합니다. "SD 4 bits Wide bus"가 아닌 "MMC 8 bits"를 선택해야 합니다.
+        </div>
+
+        <h3>4.2 SDMMC1 파라미터 설정</h3>
+
+        <p>Configuration 패널의 <strong>Parameter Settings</strong> 탭에서:</p>
+
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>값</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>Clock Edge</td>
+                <td class="config-value">Rising transition</td>
+                <td>상승 에지에서 데이터 샘플링</td>
+            </tr>
+            <tr>
+                <td>Clock Power Save</td>
+                <td class="config-value">Disable</td>
+                <td>클럭 절전 비활성화</td>
+            </tr>
+            <tr>
+                <td>Clock Division</td>
+                <td class="config-value">2</td>
+                <td>SDMMC_CLK = 200MHz / (2*2) = 50MHz</td>
+            </tr>
+            <tr>
+                <td>Hardware Flow Control</td>
+                <td class="config-value">Enable</td>
+                <td>FIFO 오버런 방지</td>
+            </tr>
+        </table>
+
+        <h3>4.3 SDMMC1 GPIO 핀 확인</h3>
+
+        <p>Pinout view에서 다음 핀들이 자동으로 할당됩니다:</p>
+
+        <table class="pin-table">
+            <tr>
+                <th>신호</th>
+                <th>핀</th>
+                <th>Alternate Function</th>
+            </tr>
+            <tr>
+                <td>SDMMC1_CK</td>
+                <td>PC12</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_CMD</td>
+                <td>PD2</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D0</td>
+                <td>PC8</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D1</td>
+                <td>PC9</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D2</td>
+                <td>PC10</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D3</td>
+                <td>PC11</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D4</td>
+                <td>PB8</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D5</td>
+                <td>PB9</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D6</td>
+                <td>PC6</td>
+                <td>AF12</td>
+            </tr>
+            <tr>
+                <td>SDMMC1_D7</td>
+                <td>PC7</td>
+                <td>AF12</td>
+            </tr>
+        </table>
+
+        <h3>4.4 GPIO 설정 확인</h3>
+
+        <p><strong>GPIO Settings</strong> 탭에서 모든 SDMMC 핀에 대해:</p>
+
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>GPIO mode</td>
+                <td class="config-value">Alternate Function Push Pull</td>
+            </tr>
+            <tr>
+                <td>GPIO Pull-up/Pull-down</td>
+                <td class="config-value">Pull-up</td>
+            </tr>
+            <tr>
+                <td>Maximum output speed</td>
+                <td class="config-value">Very High</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2 id="uart-config">5. USART3 (디버그) 설정</h2>
+
+    <div class="step-container">
+        <h3>5.1 USART3 모드 설정</h3>
+
+        <p>좌측 패널에서 <span class="menu-path">Connectivity → <span>USART3</span></span>를 선택합니다.</p>
+
+        <table>
+            <tr>
+                <th>설정 항목</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Mode</td>
+                <td class="config-value">Asynchronous</td>
+            </tr>
+        </table>
+
+        <h3>5.2 USART3 파라미터 설정</h3>
+
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Baud Rate</td>
+                <td class="config-value">9600 bits/s</td>
+            </tr>
+            <tr>
+                <td>Word Length</td>
+                <td class="config-value">8 Bits</td>
+            </tr>
+            <tr>
+                <td>Parity</td>
+                <td class="config-value">Odd</td>
+            </tr>
+            <tr>
+                <td>Stop Bits</td>
+                <td class="config-value">1</td>
+            </tr>
+            <tr>
+                <td>Over Sampling</td>
+                <td class="config-value">16 Samples</td>
+            </tr>
+        </table>
+
+        <div class="warning">
+            Parity가 <strong>Odd</strong>로 설정되어 있습니다. 터미널 프로그램에서도 동일하게 설정해야 합니다: <strong>9600-8-O-1</strong>
+        </div>
+
+        <h3>5.3 USART3 핀 설정</h3>
+
+        <table class="pin-table">
+            <tr>
+                <th>신호</th>
+                <th>핀</th>
+                <th>Alternate Function</th>
+            </tr>
+            <tr>
+                <td>USART3_TX</td>
+                <td>PB10</td>
+                <td>AF7</td>
+            </tr>
+            <tr>
+                <td>USART3_RX</td>
+                <td>PB11</td>
+                <td>AF7</td>
+            </tr>
+        </table>
+
+        <div class="important">
+            STM32H745I-DISCO에서 USART3는 <strong>PB10/PB11</strong>을 사용합니다. PD8/PD9는 FMC(외부 SDRAM)에 할당되어 있어 사용할 수 없습니다.
+        </div>
+
+        <p><strong>GPIO Settings</strong>에서:</p>
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>GPIO Pull-up/Pull-down</td>
+                <td class="config-value">Pull-up</td>
+            </tr>
+            <tr>
+                <td>Maximum output speed</td>
+                <td class="config-value">Very High</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2 id="gpio-config">6. GPIO (LED) 설정</h2>
+
+    <div class="step-container">
+        <h3>6.1 LED 핀 설정</h3>
+
+        <p>Pinout view에서 다음 핀을 <strong>GPIO_Output</strong>으로 설정합니다:</p>
+
+        <table class="pin-table">
+            <tr>
+                <th>LED</th>
+                <th>핀</th>
+                <th>용도</th>
+            </tr>
+            <tr>
+                <td>LED_GREEN (LED1)</td>
+                <td>PJ2</td>
+                <td>정상 동작 표시</td>
+            </tr>
+            <tr>
+                <td>LED_RED (LED2)</td>
+                <td>PI13</td>
+                <td>에러 표시</td>
+            </tr>
+        </table>
+
+        <h3>6.2 GPIO 출력 설정</h3>
+
+        <p>각 LED 핀을 클릭하고 <strong>GPIO Settings</strong>에서:</p>
+
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>GPIO output level</td>
+                <td class="config-value">Low</td>
+            </tr>
+            <tr>
+                <td>GPIO mode</td>
+                <td class="config-value">Output Push Pull</td>
+            </tr>
+            <tr>
+                <td>GPIO Pull-up/Pull-down</td>
+                <td class="config-value">No pull-up and no pull-down</td>
+            </tr>
+            <tr>
+                <td>Maximum output speed</td>
+                <td class="config-value">Low</td>
+            </tr>
+            <tr>
+                <td>User Label</td>
+                <td class="config-value">LED_GREEN 또는 LED_RED</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2 id="nvic-config">7. NVIC 인터럽트 설정</h2>
+
+    <div class="step-container">
+        <h3>7.1 SDMMC1 인터럽트 활성화</h3>
+
+        <p>좌측 패널에서 <span class="menu-path">System Core → <span>NVIC</span></span>를 선택합니다.</p>
+
+        <p>또는 SDMMC1 Configuration의 <strong>NVIC Settings</strong> 탭에서:</p>
+
+        <table>
+            <tr>
+                <th>인터럽트</th>
+                <th>Enabled</th>
+                <th>Priority</th>
+            </tr>
+            <tr>
+                <td>SDMMC1 global interrupt</td>
+                <td class="config-value">☑ Enable</td>
+                <td class="config-value">5 (Preemption), 0 (Sub)</td>
+            </tr>
+        </table>
+
+        <div class="note">
+            DMA 전송 완료 콜백을 위해 SDMMC1 인터럽트가 반드시 활성화되어야 합니다.
+        </div>
+    </div>
+
+    <h2 id="project-manager">8. 프로젝트 매니저 설정</h2>
+
+    <div class="step-container">
+        <h3>8.1 Project 탭</h3>
+
+        <p>상단의 <strong>Project Manager</strong> 탭을 클릭합니다.</p>
+
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Project Name</td>
+                <td class="config-value">MMC_ReadWrite_DMA</td>
+            </tr>
+            <tr>
+                <td>Project Location</td>
+                <td class="config-value">[원하는 경로]</td>
+            </tr>
+            <tr>
+                <td>Toolchain / IDE</td>
+                <td class="config-value">STM32CubeIDE</td>
+            </tr>
+        </table>
+
+        <h3>8.2 Code Generator 탭</h3>
+
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Copy all used libraries into the project folder</td>
+                <td class="config-value">☑ 선택</td>
+            </tr>
+            <tr>
+                <td>Generate peripheral initialization as a pair of .c/.h files</td>
+                <td class="config-value">☑ 선택 (권장)</td>
+            </tr>
+            <tr>
+                <td>Keep User Code when re-generating</td>
+                <td class="config-value">☑ 선택</td>
+            </tr>
+        </table>
+
+        <h3>8.3 Advanced Settings 탭</h3>
+
+        <p>특별히 변경할 사항 없음 (기본값 사용)</p>
+    </div>
+
+    <h2 id="generate-code">9. 코드 생성</h2>
+
+    <div class="step-container">
+        <p><span class="step-number">1</span> 상단 메뉴에서 <strong>GENERATE CODE</strong> 버튼을 클릭합니다.</p>
+
+        <p><span class="step-number">2</span> 코드 생성이 완료되면 "Open Project" 버튼을 클릭하여 IDE에서 프로젝트를 엽니다.</p>
+
+        <div class="success">
+            기본 구조와 초기화 코드가 자동으로 생성되었습니다!
+        </div>
+    </div>
+
+    <h2 id="user-code">10. 사용자 코드 추가</h2>
+
+    <div class="step-container">
+        <h3>10.1 main.c에 추가할 코드</h3>
+
+        <p><strong>CM7/Core/Src/main.c</strong> 파일을 열고 다음 코드를 추가합니다:</p>
+
+        <h4>전역 변수 선언 (/* USER CODE BEGIN PV */)</h4>
+
+        <pre>
+/* USER CODE BEGIN PV */
+#define BUFFER_SIZE      ((uint32_t)0x00000100U)  /* 256 bytes */
+#define BLOCK_SIZE       512
+#define NB_BLOCK_BUFFER  (BUFFER_SIZE / BLOCK_SIZE)
+#define ADDRESS          ((uint32_t)0x00000400U)
+
+MMC_HandleTypeDef hmmc1;
+__IO uint8_t TxCplt = 0;
+__IO uint8_t RxCplt = 0;
+
+/* DMA를 위해 AXI SRAM(D1)에 버퍼 배치 */
+#if defined ( __GNUC__ )
+__attribute__((section(".RAM_D1")))
+#endif
+uint8_t aTxBuffer[BUFFER_SIZE];
+
+#if defined ( __GNUC__ )
+__attribute__((section(".RAM_D1")))
+#endif
+uint8_t aRxBuffer[BUFFER_SIZE];
+/* USER CODE END PV */</pre>
+
+        <h4>printf 재정의 (/* USER CODE BEGIN 0 */)</h4>
+
+        <pre>
+/* USER CODE BEGIN 0 */
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
+
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
+  return ch;
+}
+/* USER CODE END 0 */</pre>
+
+        <h4>메인 함수 내 코드 (/* USER CODE BEGIN 2 */)</h4>
+
+        <pre>
+/* USER CODE BEGIN 2 */
+printf("\r\n ########################################## \r\n");
+printf(" #   eMMC Read/Write DMA Test Start      # \r\n");
+printf(" ########################################## \r\n\n");
+
+/* 버퍼 초기화 */
+for (uint32_t i = 0; i < BUFFER_SIZE; i++)
+{
+  aTxBuffer[i] = i;
+  aRxBuffer[i] = 0;
+}
+
+/* 캐시 클린 */
+SCB_CleanDCache_by_Addr((uint32_t*)aTxBuffer, BUFFER_SIZE);
+
+/* eMMC 쓰기 */
+printf("Writing to eMMC...\r\n");
+TxCplt = 0;
+if (HAL_MMC_WriteBlocks_DMA(&hmmc1, aTxBuffer, ADDRESS, NB_BLOCK_BUFFER) != HAL_OK)
+{
+  printf("Write Error!\r\n");
+  Error_Handler();
+}
+
+/* 쓰기 완료 대기 */
+while (TxCplt == 0);
+printf("Write Complete!\r\n");
+
+/* eMMC 읽기 */
+printf("Reading from eMMC...\r\n");
+RxCplt = 0;
+if (HAL_MMC_ReadBlocks_DMA(&hmmc1, aRxBuffer, ADDRESS, NB_BLOCK_BUFFER) != HAL_OK)
+{
+  printf("Read Error!\r\n");
+  Error_Handler();
+}
+
+/* 읽기 완료 대기 */
+while (RxCplt == 0);
+printf("Read Complete!\r\n");
+
+/* 캐시 무효화 */
+SCB_InvalidateDCache_by_Addr((uint32_t*)aRxBuffer, BUFFER_SIZE);
+
+/* 데이터 검증 */
+printf("Verifying data...\r\n");
+uint32_t errorCount = 0;
+for (uint32_t i = 0; i < BUFFER_SIZE; i++)
+{
+  if (aRxBuffer[i] != aTxBuffer[i])
+  {
+    errorCount++;
+  }
+}
+
+if (errorCount == 0)
+{
+  printf("SUCCESS! All data verified.\r\n");
+  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+}
+else
+{
+  printf("ERROR! %lu bytes mismatch.\r\n", errorCount);
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+}
+/* USER CODE END 2 */</pre>
+
+        <h4>콜백 함수 (/* USER CODE BEGIN 4 */)</h4>
+
+        <pre>
+/* USER CODE BEGIN 4 */
+void HAL_MMC_TxCpltCallback(MMC_HandleTypeDef *hmmc)
+{
+  TxCplt = 1;
+}
+
+void HAL_MMC_RxCpltCallback(MMC_HandleTypeDef *hmmc)
+{
+  SCB_InvalidateDCache_by_Addr((uint32_t*)aRxBuffer, BUFFER_SIZE);
+  RxCplt = 1;
+}
+
+void HAL_MMC_ErrorCallback(MMC_HandleTypeDef *hmmc)
+{
+  printf("MMC Error: 0x%lX\r\n", HAL_MMC_GetError(hmmc));
+  Error_Handler();
+}
+/* USER CODE END 4 */</pre>
+
+        <h3>10.2 링커 스크립트 수정 (선택사항)</h3>
+
+        <p>DMA 버퍼를 AXI SRAM에 배치하려면 링커 스크립트를 수정해야 할 수 있습니다.</p>
+
+        <p><strong>STM32H745XIHX_FLASH.ld</strong> 파일에서 MEMORY 섹션에 추가:</p>
+
+        <pre>
+/* 이미 정의되어 있을 수 있음 */
+RAM_D1 (xrw) : ORIGIN = 0x24000000, LENGTH = 512K</pre>
+
+        <p>SECTIONS에 추가:</p>
+
+        <pre>
+.RAM_D1 :
+{
+  . = ALIGN(4);
+  *(.RAM_D1)
+  . = ALIGN(4);
+} >RAM_D1</pre>
+
+        <h3>10.3 stm32h7xx_hal_conf.h 확인</h3>
+
+        <p><strong>CM7/Core/Inc/stm32h7xx_hal_conf.h</strong>에서 다음이 활성화되어 있는지 확인:</p>
+
+        <pre>
+#define HAL_MMC_MODULE_ENABLED
+#define HAL_UART_MODULE_ENABLED
+#define HAL_GPIO_MODULE_ENABLED
+#define HAL_CORTEX_MODULE_ENABLED
+#define HAL_DMA_MODULE_ENABLED</pre>
+    </div>
+
+    <h2 id="troubleshooting">11. 트러블슈팅</h2>
+
+    <div class="step-container">
+        <h3>문제: eMMC 초기화 실패</h3>
+        <div class="warning">
+            <strong>증상:</strong> HAL_MMC_Init() 반환값이 HAL_ERROR<br>
+            <strong>해결:</strong>
+            <ul>
+                <li>SDMMC1 클럭이 올바르게 설정되었는지 확인 (PLL1Q = 200MHz)</li>
+                <li>모든 GPIO 핀이 AF12로 설정되었는지 확인</li>
+                <li>Clock Division 값이 적절한지 확인 (시작은 4 이상으로)</li>
+            </ul>
+        </div>
+
+        <h3>문제: DMA 전송 실패</h3>
+        <div class="warning">
+            <strong>증상:</strong> 콜백이 호출되지 않음<br>
+            <strong>해결:</strong>
+            <ul>
+                <li>SDMMC1 인터럽트가 NVIC에서 활성화되었는지 확인</li>
+                <li>버퍼가 AXI SRAM (0x24000000)에 있는지 확인</li>
+                <li>캐시 관리 함수(Clean/Invalidate)가 호출되는지 확인</li>
+            </ul>
+        </div>
+
+        <h3>문제: 데이터 불일치</h3>
+        <div class="warning">
+            <strong>증상:</strong> 쓴 데이터와 읽은 데이터가 다름<br>
+            <strong>해결:</strong>
+            <ul>
+                <li>쓰기 전 SCB_CleanDCache_by_Addr() 호출</li>
+                <li>읽기 후 SCB_InvalidateDCache_by_Addr() 호출</li>
+                <li>버퍼 주소가 32바이트 정렬되었는지 확인</li>
+            </ul>
+        </div>
+
+        <h3>문제: printf 출력 안됨</h3>
+        <div class="warning">
+            <strong>증상:</strong> 시리얼 터미널에 출력 없음<br>
+            <strong>해결:</strong>
+            <ul>
+                <li>터미널 설정: 9600-8-O-1 (Odd Parity 주의!)</li>
+                <li>USART3 핀이 PB10/PB11인지 확인</li>
+                <li>syscalls.c에서 _write() 함수 확인</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="summary-box">
+        <h3>✅ 최종 체크리스트</h3>
+        <ul>
+            <li>☐ HSE = 25MHz, SYSCLK = 400MHz, PLL1Q = 200MHz</li>
+            <li>☐ SDMMC1: MMC 8-bit, ClockDiv=2, HW Flow Control 활성화</li>
+            <li>☐ USART3: 9600-8-O-1, PB10/PB11</li>
+            <li>☐ GPIO: PJ2(LED_GREEN), PI13(LED_RED) 출력</li>
+            <li>☐ NVIC: SDMMC1 인터럽트 활성화</li>
+            <li>☐ 버퍼: AXI SRAM에 배치, 캐시 관리</li>
+        </ul>
+    </div>
+
+    <h2>참고 자료</h2>
+
+    <ul>
+        <li><strong>RM0399</strong>: STM32H745/755 Reference Manual</li>
+        <li><strong>UM2488</strong>: STM32H745I-DISCO User Manual</li>
+        <li><strong>AN5601</strong>: Getting started with STM32H7 HAL/LL drivers</li>
+        <li>원본 예제: <code>STM32Cube_FW_H7/Projects/STM32H745I-DISCO/Examples/MMC/MMC_ReadWrite_DMA</code></li>
+    </ul>
+
+    <footer>
+        <p>문서 버전: 1.0 | 작성일: 2025-11-19</p>
+        <p>이 문서는 STM32H745I-DISCO 보드의 MMC_ReadWrite_DMA 예제를 기반으로 작성되었습니다.</p>
+    </footer>
+</body>
+</html>
